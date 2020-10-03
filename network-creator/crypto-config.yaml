@@ -1,0 +1,12 @@
+OrdererOrgs:
+  - Name: m3
+    Domain: m3.me
+    Specs:
+      - Hostname: orderer
+PeerOrgs:
+  - Name: Org1M3
+    Domain: org1.m3.me
+    Template:
+      Count: 2
+    Users:
+      Count: 2

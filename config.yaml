@@ -1,0 +1,152 @@
+name: "m3-network"
+version: 1.0.0
+
+client:
+
+  organization: org1
+
+  logging:
+    level: info
+
+  cryptoconfig:
+    path: ${GOPATH}/src/github.com/MaJloe3Jlo/HLexampleGO/additional/crypto-config
+
+  credentialStore:
+    path: /tmp/m3-store
+
+    cryptoStore:
+      path: /tmp/m3-msp
+
+   # BCCSP config for the client. Used by GO SDK.
+  BCCSP:
+    security:
+     enabled: true
+     default:
+      provider: "SW"
+     hashAlgorithm: "SHA2"
+     softVerify: true
+     level: 256
+
+  tlsCerts:
+    systemCertPool: false
+
+    client:
+      keyfile:
+      certfile:
+
+channels:
+  m3channel:
+    peers:
+      peer0.org1.m3.me:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+      peer1.org1.m3.me:
+
+    policies:
+      queryChannelConfig:
+        minResponses: 1
+        maxTargets: 1
+        retryOpts:
+          attempts: 5
+          initialBackoff: 500ms
+          maxBackoff: 5s
+          backoffFactor: 2.0
+
+
+organizations:
+  org1:
+    mspid: org1.m3.me
+    cryptoPath: peerOrganizations/org1.m3.me/users/{userName}@org1.m3.me/msp
+    peers:
+      - peer0.org1.m3.me
+      - peer1.org1.m3.me
+
+    certificateAuthorities:
+      - ca.org1.m3.me
+
+orderers:
+  orderer.m3.me:
+    url: localhost:7050
+
+    grpcOptions:
+      ssl-target-name-override: orderer.m3.me
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      allow-insecure: false
+
+    tlsCACerts:
+      # Certificate location absolute path
+      path: ${GOPATH}/src/github.com/MaJloe3Jlo/HLexampleGO/additional/crypto-config/ordererOrganizations/m3.me/tlsca/tlsca.m3.me-cert.pem
+
+peers:
+  peer0.org1.m3.me:
+    url: localhost:7051
+    eventUrl: localhost:7053
+
+    grpcOptions:
+      ssl-target-name-override: peer0.org1.m3.me
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      allow-insecure: false
+
+    tlsCACerts:
+      path: ${GOPATH}/src/github.com/MaJloe3Jlo/HLexampleGO/additional/crypto-config/peerOrganizations/org1.m3.me/tlsca/tlsca.org1.m3.me-cert.pem
+
+  peer1.org1.m3.me:
+    url: localhost:8051
+    eventUrl: localhost:8053
+
+    grpcOptions:
+      ssl-target-name-override: peer1.org1.m3.me
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      allow-insecure: false
+
+    tlsCACerts:
+      path: ${GOPATH}/src/github.com/MaJloe3Jlo/HLexampleGO/additional/crypto-config/peerOrganizations/org1.m3.me/tlsca/tlsca.org1.m3.me-cert.pem
+
+certificateAuthorities:
+  ca.org1.m3.me:
+    url: http://localhost:7054
+    httpOptions:
+      verify: false
+    registrar:
+      enrollId: admin
+      enrollSecret: adminpw
+    caName: ca.org1.m3.me
+    tlsCACerts:
+      path: ${GOPATH}/src/github.com/MaJloe3Jlo/HLexampleGO/additional/crypto-config/peerOrganizations/org1.m3.me/ca/ca.org1.m3.me-cert.pem
+
+entityMatchers:
+  peer:
+    - pattern: (\w*)peer0.org1.m3.me(\w*)
+      urlSubstitutionExp: localhost:7051
+      eventUrlSubstitutionExp: localhost:7053
+      sslTargetOverrideUrlSubstitutionExp: peer0.org1.m3.me
+      mappedHost: peer0.org1.m3.me
+
+    - pattern: (\w*)peer1.org1.m3.me(\w*)
+      urlSubstitutionExp: localhost:8051
+      eventUrlSubstitutionExp: localhost:8053
+      sslTargetOverrideUrlSubstitutionExp: peer1.org1.m3.me
+      mappedHost: peer1.org1.m3.me
+
+  orderer:
+    - pattern: (\w*)orderer.m3.me(\w*)
+      urlSubstitutionExp: localhost:7050
+      sslTargetOverrideUrlSubstitutionExp: orderer.m3.me
+      mappedHost: orderer.m3.me
+
+  certificateAuthorities:
+    - pattern: (\w*)ca.org1.m3.me(\w*)
+      urlSubstitutionExp: http://localhost:7054
+      mappedHost: ca.org1.m3.me

@@ -1,0 +1,86 @@
+Profiles:
+    m3:
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *m3
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *Org1M3
+        Consortium: SampleConsortium
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *m3
+                    - *Org1M3
+
+################################################################################
+#
+#   SECTION: Organizations
+#
+#   - This section defines the different organizational identities which will
+#   be referenced later in the configuration.
+#
+################################################################################
+Organizations:
+    - &m3
+        Name: m3
+        ID: m3.me
+        AdminPrincipal: Role.ADMIN
+        MSPDir: crypto-config/ordererOrganizations/m3.me/msp
+
+    - &Org1M3
+        Name: M3Organization1
+        ID: org1.m3.me
+        AdminPrincipal: Role.ADMIN
+        MSPDir: crypto-config/peerOrganizations/org1.m3.me/msp
+        AnchorPeers:
+            - Host: peer0.m3.me
+              Port: 7051
+
+################################################################################
+#
+#   SECTION: Orderer
+#
+#   - This section defines the values to encode into a config transaction or
+#   genesis block for orderer related parameters.
+#
+################################################################################
+Orderer: &OrdererDefaults
+    OrdererType: solo
+    Addresses:
+        - orderer.m3.me:7050
+    BatchTimeout: 5s
+    # Batch Size: Controls the number of messages batched into a block.
+    BatchSize:
+        # Max Message Count: The maximum number of messages to permit in a batch.
+        MaxMessageCount: 10
+        # Absolute Max Bytes: The absolute maximum number of bytes allowed for
+        # the serialized messages in a batch. If the "kafka" OrdererType is
+        # selected, set 'message.max.bytes' and 'replica.fetch.max.bytes' on the
+        # Kafka brokers to a value that is larger than this one.
+        AbsoluteMaxBytes: 98 MB
+        # Preferred Max Bytes: The preferred maximum number of bytes allowed for
+        # the serialized messages in a batch. A message larger than the
+        # preferred max bytes will result in a batch larger than preferred max
+        # bytes.
+        PreferredMaxBytes: 512 KB
+    # Max Channels is the maximum number of channels to allow on the ordering
+    # network. When set to 0, this implies no maximum number of channels.
+    MaxChannels: 0
+
+    # Organizations is the list of orgs which are defined as participants on
+    # the orderer side of the network.
+    Organizations:
+
+################################################################################
+#
+#   SECTION: Application
+#
+#   - This section defines the values to encode into a config transaction or
+#   genesis block for application related parameters.
+#
+################################################################################
+Application: &ApplicationDefaults
+    Organizations:
