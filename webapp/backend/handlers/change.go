@@ -12,7 +12,7 @@ func (a *App) ChangeHandler(w http.ResponseWriter, r *http.Request) {
 	product := &model.Product{}
 
 	if err := json.NewDecoder(r.Body).Decode(product); err != nil {
-		fmt.Fprint(w, "error unmarshall json")
+		fmt.Fprint(w, err)
 	}
 
 	value, err := json.Marshal(product)

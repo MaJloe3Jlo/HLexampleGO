@@ -7,7 +7,7 @@ yarn install
 
 ### Set API host
 ```
-/src/api/index.js
+/src/vue.config.js
 ```
 
 ### Compiles and hot-reloads for development

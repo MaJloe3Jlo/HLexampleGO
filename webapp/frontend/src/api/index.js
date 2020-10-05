@@ -1,20 +1,24 @@
 
 import axios from 'axios';
 
-const HOST = process.env.NODE_ENV === 'development' ? 'http://localhost:7777' : 'http://www.host:8080';
-
 export default {
   get() {
     return axios({
       method: 'GET',
-      url: HOST + '/'
+      url: '/api/get'
     })
   },
   save(data) {
     return axios({
       method: 'POST',
-      url: HOST + '/post',
+      url: '/api/post',
       data
+    })
+  },
+  list() {
+    return axios({
+      method: 'GET',
+      url: '/api/list'
     })
   }
 };
