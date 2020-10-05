@@ -66,6 +66,10 @@ func (cs *ChaincodeService) Invoke(stub shim.ChaincodeStubInterface) pb.Response
 		return cs.invoke(stub, arguments)
 	}
 
+	if arguments[0] == "all" {
+		return cs.queryAll(stub, arguments)
+	}
+
 	return shim.Error(function)
 }
 
