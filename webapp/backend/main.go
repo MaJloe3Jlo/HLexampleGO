@@ -7,9 +7,9 @@ import (
 )
 
 func Server(app *handlers.App) {
-	http.HandleFunc("/", app.HomeHandler)
-	http.HandleFunc("/post", app.ChangeHandler)
-	http.HandleFunc("/all", app.AllHandler)
+	http.HandleFunc("/api/get", app.HomeHandler)
+	http.HandleFunc("/api/post", app.ChangeHandler)
+	http.HandleFunc("/api/list", app.AllHandler)
 
 	http.ListenAndServe(":7777", nil)
 }
