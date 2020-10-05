@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 
+	"github.com/MaJloe3Jlo/HLexampleGO/cc/model"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
 )
@@ -24,7 +25,7 @@ func (cs *ChaincodeService) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	}
 
 	// Marshall json data.
-	bytes, err := json.Marshal(Product{
+	bytes, err := json.Marshal(model.Product{
 		ID:       1,
 		Name:     "Sofa",
 		Price:    200,

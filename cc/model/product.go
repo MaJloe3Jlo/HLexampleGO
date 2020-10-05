@@ -1,4 +1,4 @@
-package main
+package model
 
 // Object that we operate in blockchain.
 type Product struct {
