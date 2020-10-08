@@ -5,6 +5,7 @@ Simple hyperledager + go app
 make
 
 ## start frontend
+### maded by [Victor Makenskiy](https://github.com/makenskiy)
 cd webapp/frontend
 
 yarn serve
